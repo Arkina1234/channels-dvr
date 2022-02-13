@@ -15,4 +15,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      run: docker run \
+             --detach \
+             --name=channels-dvr \
+             --net=host \
+             --restart=on-failure:10 \
+             --device /dev/dri:/dev/dri \
+             --volume /mnt/disk/dvr/config:/channels-dvr \
+             --volume /mnt/disk/dvr/recordings:/shares/DVR \
+             fancybits/channels-dvr:latest
